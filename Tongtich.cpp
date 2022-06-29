@@ -20,7 +20,6 @@ int main()
 	do
 	{
 		i = getMaxIndex(a,isUse,n);
-		cout<<i<<endl;
 		if (i != -1)
 		{
 			isUse[i] = true;
