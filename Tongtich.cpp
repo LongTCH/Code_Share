@@ -12,7 +12,7 @@ int getMaxIndex(int a[], bool isUse[], int n)
 }
 int main()
 {
-	int a[] = {6,7,5,3,6};
+	int a[] = {6, 7, 5, 3, 5};
 	int n = sizeof(a) / sizeof(int);
 	bool isUse[n]={};
 	int S = 0, S1 = 0, S2 = 0, i;
@@ -20,6 +20,7 @@ int main()
 	do
 	{
 		i = getMaxIndex(a,isUse,n);
+		cout<<i<<endl;
 		if (i != -1)
 		{
 			isUse[i] = true;
@@ -50,7 +51,7 @@ int main()
 				}
 				else if (isUse[i-1] && !isUse[i+1] && S<=S2) 
 				{
-					isUse[i-1] = true;
+					isUse[i+1] = true;
 					S = S2;
 				}
 				else if (!isUse[i-1] && !isUse[i+1])
