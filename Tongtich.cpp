@@ -1,80 +1,48 @@
 #include <iostream>
 using namespace std;
-int getMaxIndex(int a[], bool isUse[], int n)
+int Sum = -999999;
+void Try(int i, bool dup, int a[], int n, int S)
 {
-	int iMax = -1;
-	for (int i=0; i<n; i++) if (!isUse[i])
-	{
-		iMax=i; break;
-	}
-	for (int i=iMax+1; i<n; i++) if (!isUse[i] && a[i]>a[iMax]) iMax = i;
-	return iMax;
+		if (dup) 
+		{
+			S+=a[i];
+			if (i == n-1)
+			{
+				if (Sum < S) Sum = S;
+			} else Try(i+1,false,a,n,S);
+		}
+		else 
+		{
+			S+=a[i];
+			if (i == n-1)
+			{
+				if (Sum < S) Sum = S;
+			} else Try(i+1,false,a,n,S);
+			S = S - a[i] - a[i-1] + a[i]*a[i-1];
+			if (i == n-1)
+			{
+				if (Sum < S) Sum = S;
+			} else Try(i+1,true,a,n,S);
+		}
+		
 }
 int main()
 {
-	int a[] = {6, 7, 5, 3, 5};
+	int a[] = {6,8,8,4,3};
 	int n = sizeof(a) / sizeof(int);
-	bool isUse[n]={};
-	int S = 0, S1 = 0, S2 = 0, i;
-	for (i=0; i<n; ++i) S+=a[i];
-	do
+	int dp[n+1]; dp[0]=0; dp[1]=a[0];
+	int S = a[0];
+	int i = 2;
+	while (i <= n)
 	{
-		i = getMaxIndex(a,isUse,n);
-		if (i != -1)
-		{
-			isUse[i] = true;
-			if (i == 0) 
-			{
-			    if (!isUse[1] && S<=S-a[0]-a[1]+a[0]*a[1]) 
-				{
-					S = S-a[0]-a[1]+a[0]*a[1];
-					isUse[1] = true;
-				}	
-			}
-			else if (i == n-1)
-			{
-				if (!isUse[n-2] && S<=S-a[n-1]-a[n-2]+a[n-1]*a[n-2]) 
-				{
-					S = S-a[n-1]-a[n-2]+a[n-1]*a[n-2];
-					isUse[n-2] = true;
-				}	
-			}	
-			else
-			{
-				S1 = S - a[i] - a[i-1] + a[i]*a[i-1]; 
-				S2 = S - a[i] - a[i+1] + a[i]*a[i+1]; 
-				if (!isUse[i-1] && isUse[i+1] && S<=S1) 
-				{
-					isUse[i-1] =true;
-					S = S1;
-				}
-				else if (isUse[i-1] && !isUse[i+1] && S<=S2) 
-				{
-					isUse[i+1] = true;
-					S = S2;
-				}
-				else if (!isUse[i-1] && !isUse[i+1])
-				{
-					if (S1>=S2)
-					{
-						if (S<=S1) 
-						{
-							isUse[i-1] = true;
-				        	S = S1;
-						}
-					}
-					else 
-					{
-						if (S<=S2)
-						{
-							isUse[i+1] = true;
-				        	S = S2;
-						}
-					}
-				} 
-			}
-		}
-	} while (i!=-1);
-	cout<<"Sum = "<<S;
+		int p = dp[i-2] + a[i-2]*a[i-1];
+		int q = dp[i-1] + a[i-1];
+		if (p>=q) dp[i] = p;
+		else dp[i] = q;
+		++i;
+	}
+	Try(1,false,a,n,S);
+	cout<<"Sum = "<<dp[n]<<endl;
+	cout<<"Sum2 = "<<Sum;
 	return 0;
 }
